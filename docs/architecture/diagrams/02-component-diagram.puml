@@ -1,0 +1,48 @@
+@startuml
+title Component Architecture
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor Citizen
+actor "Department Account" as Department
+actor Administrator
+
+component "React Web Application" as Web
+component "Express REST API" as API {
+  component "Auth Module" as Auth
+  component "Department & Category Module" as Dept
+  component "Complaint & Workflow Module" as Complaint
+  component "Notification Module" as Notification
+  component "GIS Module" as GIS
+  component "Reporting Module" as Reporting
+  component "AI Adapter" as AIAdapter
+  component "RAG Adapter" as RAGAdapter
+}
+component "FastAPI Classification Service" as AI
+component "FastAPI RAG Service" as RAG
+database "MySQL Server\n6 logical databases" as MySQL
+database "ChromaDB" as Chroma
+cloud "Gemini API" as Gemini
+cloud "OpenStreetMap" as OSM
+
+Citizen --> Web
+Department --> Web
+Administrator --> Web
+Web --> API : HTTPS / JSON
+Auth --> MySQL : auth_db
+Dept --> MySQL : department_db
+Complaint --> MySQL : complaint_db
+Notification --> MySQL : notification_db
+GIS --> MySQL : gis_db
+Reporting --> MySQL : reporting_db / owned reads
+Complaint --> Dept : routing interface
+Complaint --> Notification : domain events
+Complaint --> GIS : location interface
+AIAdapter --> AI : REST
+RAGAdapter --> RAG : REST
+AI --> Gemini
+RAG --> Gemini
+RAG --> Chroma
+Web --> OSM : map tiles
+@enduml
+

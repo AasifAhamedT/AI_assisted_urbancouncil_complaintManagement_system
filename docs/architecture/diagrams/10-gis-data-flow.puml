@@ -1,0 +1,39 @@
+@startuml
+title GIS Data Flow and Authorization
+skinparam shadowing false
+
+actor Citizen
+actor "Department Account" as Department
+actor Administrator
+participant "React Leaflet" as Map
+participant "Express API" as API
+participant "Authorization Policy" as Policy
+participant "Complaint Service" as Complaint
+participant "GIS Service" as GIS
+database gis_db
+cloud OpenStreetMap as OSM
+
+Citizen -> Map : Select complaint location
+Map -> OSM : Load tiles
+Map -> API : Coordinates with complaint submission
+API -> Policy : Verify Citizen and request context
+API -> GIS : Validate and store coordinates
+GIS -> gis_db
+
+group Authorized location retrieval
+  Department -> API : Request assigned complaint map data
+  Administrator -> API : Request authorized system map data
+  API -> Policy : Derive trusted role/department scope
+  Policy -> Complaint : Resolve accessible complaint IDs
+  Complaint --> Policy : Authorized identifier set/filter
+  Policy --> API : Enforced query scope
+  API -> GIS : Fetch locations within scope
+  GIS -> gis_db
+  GIS --> API : Authorized coordinates only
+end
+
+note bottom
+  A client-supplied department ID never grants access.
+end note
+@enduml
+

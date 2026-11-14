@@ -1,0 +1,41 @@
+@startuml
+title Planned Deployment Topology
+skinparam shadowing false
+
+node "User Device" {
+  artifact "Web Browser" as Browser
+}
+
+node "Application Host" {
+  node "Web Container" as WebC
+  node "Node API Container" as ApiC
+  node "AI Classifier Container" as AiC
+  node "RAG Container" as RagC
+  node "ChromaDB Volume/Container" as ChromaC
+}
+
+node "Database Host" {
+  database "MySQL 8.0 Server\nauth_db\ncomplaint_db\ndepartment_db\nnotification_db\ngis_db\nreporting_db" as DB
+}
+
+cloud "Gemini API" as Gemini
+cloud "OpenStreetMap" as OSM
+folder "Private Upload Storage\nDevelopment: local volume\nProduction: [NEEDS CONFIRMATION]" as Uploads
+
+Browser --> WebC : HTTPS
+Browser --> ApiC : HTTPS / REST
+Browser --> OSM : HTTPS tiles
+ApiC --> DB : TLS-capable MySQL connection
+ApiC --> AiC : private REST
+ApiC --> RagC : private REST
+ApiC --> Uploads
+AiC --> Gemini : HTTPS
+RagC --> Gemini : HTTPS
+RagC --> ChromaC
+
+note bottom
+  Exact hosting provider, network layout, backups,
+  and production object storage are deferred.
+end note
+@enduml
+

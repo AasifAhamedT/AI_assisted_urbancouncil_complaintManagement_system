@@ -1,0 +1,15 @@
+{
+  "name": "smart-urban-council-complaint-management-system",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-assisted GIS-based platform for smart citizen services and digital governance.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=11.0.0"
+  }
+}
+

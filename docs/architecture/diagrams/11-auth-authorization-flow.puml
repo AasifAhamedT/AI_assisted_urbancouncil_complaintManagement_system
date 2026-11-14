@@ -1,0 +1,36 @@
+@startuml
+title Authentication and Resource Authorization Flow
+skinparam shadowing false
+
+start
+:Receive credentials;
+:Validate input and apply rate limit;
+:Load active user account;
+if (Credentials valid and account active?) then (yes)
+  :Issue short-lived access token;
+  :Issue and persist revocable refresh token record;
+else (no)
+  :Return generic authentication failure;
+  stop
+endif
+:Client requests protected resource;
+:Verify access-token signature, expiry, and claims;
+if (Token valid?) then (yes)
+  :Build trusted principal from authenticated identity;
+  if (Role permits operation?) then (yes)
+    :Load resource using ownership/department scope;
+    if (Resource within permitted scope?) then (yes)
+      :Perform operation and audit when required;
+      :Return authorized response;
+    else (no)
+      :Return access denial without sensitive leakage;
+    endif
+  else (no)
+    :Return forbidden response;
+  endif
+else (no)
+  :Return unauthenticated response;
+endif
+stop
+@enduml
+

@@ -1,0 +1,33 @@
+@startuml
+title Reassignment Approval Sequence
+skinparam shadowing false
+
+actor "Department Account" as Department
+actor Administrator
+participant "Express API" as API
+participant "Authorization Policy" as Policy
+participant "Complaint Service" as Complaint
+participant "Department Service" as DeptService
+participant "Notification Service" as Notification
+
+Department -> API : POST reassignment request + mandatory reason
+API -> Policy : Verify complaint belongs to authenticated department
+Policy --> API : Authorized
+API -> Complaint : Create PENDING request
+Complaint -> Notification : Notify Administrator
+API --> Department : Request recorded; assignment unchanged
+
+Administrator -> API : Approve or reject request
+API -> Policy : Verify Administrator role
+alt approve
+  API -> DeptService : Validate active target department
+  DeptService --> API : Valid target
+  API -> Complaint : Transaction: approve request, change assignment,\nrecord assignment history and audit reason
+  Complaint -> Notification : Notify old/new department and Citizen as appropriate
+else reject
+  API -> Complaint : Reject request and record decision reason
+  Complaint -> Notification : Notify requesting department
+end
+API --> Administrator : Decision recorded
+@enduml
+

@@ -1,0 +1,30 @@
+@startuml
+title Controlled Complaint Status Workflow
+skinparam shadowing false
+
+[*] --> SUBMITTED
+SUBMITTED --> UNDER_REVIEW : assessment begins
+UNDER_REVIEW --> IN_PROGRESS : accepted for processing
+UNDER_REVIEW --> AWAITING_INFORMATION : clarification required
+UNDER_REVIEW --> REJECTED : invalid/out of scope + reason
+AWAITING_INFORMATION --> UNDER_REVIEW : information received
+IN_PROGRESS --> AWAITING_INFORMATION : more information required
+IN_PROGRESS --> RESOLVED : work completed
+RESOLVED --> CLOSED : resolution finalized
+RESOLVED --> IN_PROGRESS : reopen with reason
+REJECTED --> CLOSED : rejection finalized
+REJECTED --> UNDER_REVIEW : authorized reversal
+CLOSED --> [*]
+
+note right of CLOSED
+  Reopening a closed complaint is not
+  permitted until a specific administrator
+  rule is approved.
+end note
+
+note bottom
+  Reassignment is a parallel request lifecycle,
+  not a complaint status.
+end note
+@enduml
+

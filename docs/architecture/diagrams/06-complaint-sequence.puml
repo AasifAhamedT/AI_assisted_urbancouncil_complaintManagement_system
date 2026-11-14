@@ -1,0 +1,42 @@
+@startuml
+title Complaint Submission Sequence
+skinparam shadowing false
+
+actor Citizen
+participant "React Web" as Web
+participant "Express API" as API
+participant "Auth Policy" as Auth
+participant "Complaint Service" as Complaint
+participant "GIS Service" as GIS
+participant "AI Classifier" as AI
+participant "Department Service" as Dept
+participant "Notification Service" as Notification
+
+Citizen -> Web : Submit complaint
+Web -> API : POST /complaints + access token
+API -> Auth : Authenticate and authorize Citizen
+Auth --> API : Trusted principal
+API -> Complaint : Validate and create complaint
+Complaint --> API : Saved complaint + reference
+API -> GIS : Save validated coordinates
+API -> AI : Classify(text, active categories)
+alt valid allowed recommendation
+  AI --> API : Structured recommendation
+  API -> Complaint : Store immutable AI result
+  API -> Dept : Resolve configured category mapping
+  alt active mapping exists
+    Dept --> API : Department identifier
+    API -> Complaint : Record final category and assignment
+  else mapping missing
+    Dept --> API : No active mapping
+    API -> Complaint : Mark administrator review required
+  end
+else AI unavailable or invalid
+  AI --> API : Error / invalid response / timeout
+  API -> Complaint : Record failure and review requirement
+end
+API -> Notification : Emit complaint-created event
+API --> Web : 201 Created + reference
+Web --> Citizen : Confirmation
+@enduml
+

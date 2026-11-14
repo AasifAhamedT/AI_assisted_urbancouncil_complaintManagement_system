@@ -1,0 +1,47 @@
+@startuml
+title RAG Architecture - Ingestion and Query
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor Administrator
+actor Citizen
+component "React Web" as Web
+component "Express API / RAG Adapter" as API
+component "RAG FastAPI Service" as RAG
+component "Document Extractor & Cleaner" as Extractor
+component "Chunker" as Chunker
+component "Embedding Adapter" as Embed
+component "Retriever" as Retriever
+component "Grounded Answer Generator" as Generator
+database "ChromaDB" as Chroma
+folder "Authorized Document Store" as Docs
+cloud "Gemini APIs" as Gemini
+
+Administrator --> Web : Manage authorized documents
+Web --> API
+API --> Docs : Store versioned document
+API --> RAG : Request ingestion
+RAG --> Extractor
+Extractor --> Chunker
+Chunker --> Embed
+Embed --> Gemini : Generate embeddings
+Embed --> Chroma : Store chunks, vectors, source metadata
+
+Citizen --> Web : Ask question
+Web --> API : Authenticated/controlled query
+API --> RAG
+RAG --> Retriever
+Retriever --> Gemini : Query embedding
+Retriever --> Chroma : Similarity search
+Retriever --> Generator : Relevant chunks + sources
+Generator --> Gemini : Grounded prompt
+Generator --> RAG : Answer or abstention + citations
+RAG --> API
+API --> Web
+
+note bottom of RAG
+  No private complaint database access.
+  Unsupported answers must abstain.
+end note
+@enduml
+

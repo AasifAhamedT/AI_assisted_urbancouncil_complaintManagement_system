@@ -1,0 +1,47 @@
+@startuml
+title Primary Use Cases
+left to right direction
+skinparam shadowing false
+
+actor Citizen
+actor "Department Account" as Department
+actor Administrator
+
+rectangle System {
+  usecase "Register and authenticate" as UC1
+  usecase "Submit complaint" as UC2
+  usecase "Track own complaints" as UC3
+  usecase "Respond to information request" as UC4
+  usecase "Use grounded chatbot" as UC5
+  usecase "View assigned complaints" as UC6
+  usecase "Record actions and notes" as UC7
+  usecase "Update permitted status" as UC8
+  usecase "Request reassignment" as UC9
+  usecase "Manage departments and accounts" as UC10
+  usecase "Manage categories and routing" as UC11
+  usecase "Review AI recommendations" as UC12
+  usecase "Decide reassignment requests" as UC13
+  usecase "View authorized maps and reports" as UC14
+  usecase "Manage RAG documents" as UC15
+}
+
+Citizen --> UC1
+Citizen --> UC2
+Citizen --> UC3
+Citizen --> UC4
+Citizen --> UC5
+Department --> UC1
+Department --> UC6
+Department --> UC7
+Department --> UC8
+Department --> UC9
+Department --> UC14
+Administrator --> UC1
+Administrator --> UC10
+Administrator --> UC11
+Administrator --> UC12
+Administrator --> UC13
+Administrator --> UC14
+Administrator --> UC15
+@enduml
+

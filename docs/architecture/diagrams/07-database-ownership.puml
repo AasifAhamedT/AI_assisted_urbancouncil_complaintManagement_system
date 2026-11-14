@@ -1,0 +1,39 @@
+@startuml
+title Logical Database Ownership
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+component "Authentication Module" as Auth
+component "Complaint Module" as Complaint
+component "Department Module" as Department
+component "Notification Module" as Notification
+component "GIS Module" as GIS
+component "Reporting Module" as Reporting
+
+database auth_db
+database complaint_db
+database department_db
+database notification_db
+database gis_db
+database reporting_db
+
+Auth --> auth_db : owns reads/writes
+Complaint --> complaint_db : owns reads/writes
+Department --> department_db : owns reads/writes
+Notification --> notification_db : owns reads/writes
+GIS --> gis_db : owns reads/writes
+Reporting --> reporting_db : owns derived data
+
+Complaint ..> Auth : user identity interface
+Complaint ..> Department : category/routing interface
+Complaint ..> GIS : location interface
+Complaint ..> Notification : domain event
+Reporting ..> Complaint : reporting contract/events
+Reporting ..> Department : reporting contract
+
+note bottom
+  Cross-database identifiers are allowed.
+  Cross-database foreign keys and direct cross-owner writes are prohibited.
+end note
+@enduml
+

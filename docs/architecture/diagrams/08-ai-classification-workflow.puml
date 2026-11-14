@@ -1,0 +1,35 @@
+@startuml
+title AI Classification and Human Review
+skinparam shadowing false
+
+start
+:Backend loads active categories;
+:Send necessary complaint text and allow-list;
+:Gemini produces structured response;
+if (Valid JSON and Pydantic schema?) then (yes)
+  if (Category exists and is active?) then (yes)
+    :Store original recommendation, explanation,\nconfidence and ambiguity;
+    if (Human review required by policy?) then (yes)
+      :Administrator approves or overrides;
+      :Record final category and audit reason;
+    else (no)
+      :Apply recommendation under approved policy;
+    endif
+    :Backend loads configured mapping;
+    if (Active mapping exists?) then (yes)
+      :Assign mapped department;
+    else (no)
+      :Queue administrator routing review;
+    endif
+  else (no)
+    :Reject unsupported category;
+    :Queue administrator classification review;
+  endif
+else (no)
+  :Record provider/schema failure;
+  :Queue administrator classification review;
+endif
+:Complaint remains durably stored throughout;
+stop
+@enduml
+

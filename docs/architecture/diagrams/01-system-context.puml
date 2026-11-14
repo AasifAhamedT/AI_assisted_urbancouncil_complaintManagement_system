@@ -1,0 +1,27 @@
+@startuml
+title Smart Urban Council Complaint Management System - Context
+left to right direction
+skinparam shadowing false
+
+actor Citizen
+actor "Department Account" as Department
+actor Administrator
+
+rectangle "Complaint Management Platform" as Platform
+cloud "Google Gemini API" as Gemini
+cloud "OpenStreetMap Tile Services" as OSM
+rectangle "Authorized Council Documents\n[NEEDS CONFIRMATION]" as Documents
+
+Citizen --> Platform : Submit and track complaints\nUse grounded chatbot
+Department --> Platform : Process assigned complaints\nRequest reassignment
+Administrator --> Platform : Configure and monitor\nReview AI and reassignments
+Platform --> Gemini : Classification and grounded generation
+Platform --> OSM : Map tiles and map context
+Documents --> Platform : Approved knowledge content
+
+note bottom of Platform
+  Proposed system; not claimed as
+  officially adopted or deployed.
+end note
+@enduml
+

@@ -1,0 +1,32 @@
+@startuml
+title Complaint Submission and Routing Activity
+skinparam shadowing false
+
+start
+:Citizen submits validated complaint data;
+:Authenticate Citizen and validate ownership context;
+if (Input and attachments valid?) then (yes)
+  :Create complaint and unique reference;
+  :Store location through GIS interface;
+  :Request AI category recommendation;
+  if (AI response valid and allowed?) then (yes)
+    :Store original AI recommendation;
+    :Select recommended category for review/routing policy;
+    if (Active mapping exists?) then (yes)
+      :Backend resolves assigned department;
+      :Record assignment and history;
+    else (no)
+      :Flag for administrator review;
+    endif
+  else (no)
+    :Record classification failure;
+    :Flag for administrator review;
+  endif
+  :Create relevant notifications;
+  :Return complaint reference to Citizen;
+else (no)
+  :Return structured validation error;
+endif
+stop
+@enduml
+
