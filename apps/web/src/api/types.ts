@@ -197,3 +197,93 @@ export interface ClassificationQueueItem {
   createdAt: string;
   recommendation: AiRecommendation | null;
 }
+
+export type ReassignmentStatus = "PENDING" | "APPROVED" | "REJECTED" | "CANCELLED";
+
+export interface ReassignmentRequest {
+  id: string;
+  complaintId: string;
+  complaintReference: string;
+  requestedByUserId: string;
+  fromDepartmentId: string;
+  suggestedDepartmentId: string | null;
+  approvedDepartmentId: string | null;
+  reason: string;
+  status: ReassignmentStatus;
+  decidedByUserId: string | null;
+  decisionReason: string | null;
+  createdAt: string;
+  decidedAt: string | null;
+}
+
+export type NotificationEventType =
+  | "COMPLAINT_SUBMITTED"
+  | "COMPLAINT_ASSIGNED"
+  | "COMPLAINT_STATUS_CHANGED"
+  | "REASSIGNMENT_REQUESTED"
+  | "REASSIGNMENT_APPROVED"
+  | "REASSIGNMENT_REJECTED";
+
+export interface NotificationRecord {
+  id: string;
+  recipientUserId: string;
+  complaintId: string | null;
+  eventType: NotificationEventType;
+  title: string;
+  message: string;
+  metadata: Record<string, unknown> | null;
+  readAt: string | null;
+  createdAt: string;
+}
+
+export interface NotificationPreference {
+  userId: string;
+  inAppEnabled: boolean;
+  emailEnabled: false;
+  smsEnabled: false;
+  updatedAt: string | null;
+}
+
+export type KnowledgeIngestionStatus = "PROCESSING" | "READY" | "FAILED";
+
+export interface KnowledgeDocumentVersion {
+  version: number;
+  originalFilename: string;
+  mediaType: string;
+  sizeBytes: number;
+  checksumSha256: string;
+  status: KnowledgeIngestionStatus;
+  chunkCount: number;
+  versionNote: string | null;
+  failureCode: string | null;
+  createdByUserId: string;
+  createdAt: string;
+  completedAt: string | null;
+}
+
+export interface KnowledgeDocument {
+  id: string;
+  title: string;
+  isActive: boolean;
+  currentVersion: number | null;
+  createdByUserId: string;
+  createdAt: string;
+  updatedAt: string;
+  versions: KnowledgeDocumentVersion[];
+}
+
+export interface KnowledgeCitation {
+  documentId: string;
+  documentTitle: string;
+  version: number;
+  location: string;
+  excerpt: string;
+}
+
+export interface KnowledgeAnswer {
+  answer: string;
+  abstained: boolean;
+  citations: KnowledgeCitation[];
+  provider: string;
+  modelName: string;
+}

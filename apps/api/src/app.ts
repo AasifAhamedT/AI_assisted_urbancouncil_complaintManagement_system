@@ -11,6 +11,9 @@ import { classificationAdminRouter } from "./modules/classification/classificati
 import { complaintRouter } from "./modules/complaint/complaint.routes.js";
 import { departmentAdminRouter } from "./modules/department/department.routes.js";
 import { gisRouter } from "./modules/gis/gis.routes.js";
+import { knowledgeRouter } from "./modules/knowledge/knowledge.routes.js";
+import { notificationRouter } from "./modules/notification/notification.routes.js";
+import { reassignmentRouter } from "./modules/reassignment/reassignment.routes.js";
 import { systemRouter } from "./modules/system/system.routes.js";
 
 export const createApp = () => {
@@ -56,6 +59,9 @@ export const createApp = () => {
   app.use("/api/v1/admin/classifications", classificationAdminRouter);
   app.use("/api/v1/complaints", complaintRouter);
   app.use("/api/v1/gis", gisRouter);
+  app.use("/api/v1/knowledge", knowledgeRouter);
+  app.use("/api/v1/notifications", notificationRouter);
+  app.use("/api/v1/reassignments", reassignmentRouter);
   app.use("/api/v1/system", systemRouter);
 
   app.use((request, response) => {

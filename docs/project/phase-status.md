@@ -15,7 +15,11 @@
 | 10 — Frontend application | Complete and verified | Responsive three-role React UI, session rotation, complaint workflows, Administrator configuration, service readiness, accessibility, desktop/mobile QA, and authenticated Citizen/Department/Administrator walkthroughs verified. |
 | 11 — GIS integration | Complete and verified | Citizen map selection, SRID 4326 storage, scoped marker maps, status/category/bounds/nearby filters, and Citizen/Department/Administrator authorization verified through automated and live tests. Authoritative Council boundaries remain `[NEEDS CONFIRMATION]`. |
 | 12 — AI complaint classification | Complete and verified | Gemini structured classification, active-category validation, safe fallbacks, immutable attempt history, migration 008, Administrator approval/override, mapping-controlled routing, duplicate protection, role denial, responsive UI, and realistic live provider samples verified. No accuracy claim is made without a labelled evaluation dataset. |
-| 13 onward | Not started | Requires phase approval. |
+| 13 — Optional ML experiment | Skipped by design | No suitable labelled dataset is available; the approved plan says not to force this phase. Gemini workflow evaluation continues with manually reviewed examples. |
+| 14 — Department routing and reassignment | Complete and verified | Migration 009, Department requests, duplicate-pending protection, Administrator approval/rejection, transactional assignment history, unchanged complaint status, old/new Department isolation, responsive UI, automated tests, live role checks, and browser flows verified. |
+| 15 — In-app notifications | Complete and verified | Migration 010, durable recipient-scoped history, unread state, preferences, deduplication, failure audit/logging, complaint/classification/reassignment event integration, cross-recipient denial, navigation badge, responsive notification centre, automated regression tests, live role checks, and browser flows verified. |
+| 16 — Source-grounded RAG chatbot | Implemented; provider configuration and live verification pending | Authenticated Express adapter, Administrator-only PDF/DOCX/text ingestion and version governance, Gemini embeddings/generation, ChromaDB retrieval, citation validation, abstention, Citizen chatbot, responsive interfaces, and automated security/business tests implemented. Private RAG Gemini configuration and live role/browser verification remain. No MySQL migration is required. |
+| 17 onward | Not started | Requires phase approval. |
 
 ## Evidence policy
 

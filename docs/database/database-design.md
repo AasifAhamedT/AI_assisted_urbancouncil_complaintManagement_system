@@ -168,6 +168,9 @@ GIS location and notification records are in other databases. Their creation is 
 | `database/migrations/005_gis_schema.sql` | Creates spatial tables and indexes. |
 | `database/migrations/006_reporting_schema.sql` | Creates reporting snapshot/cache tables. |
 | `database/migrations/007_department_account_uniqueness.sql` | Enforces one Department Account identity per department. |
+| `database/migrations/008_classification_review_ledger.sql` | Stores immutable Administrator classification decisions separately from provider recommendations. |
+| `database/migrations/009_reassignment_workflow_guards.sql` | Records the approved destination and enforces at most one pending reassignment per complaint. |
+| `database/migrations/010_notification_delivery_guards.sql` | Adds event-recipient deduplication and notification-dispatch failure auditing. |
 
 The scripts use `CREATE DATABASE IF NOT EXISTS`, `CREATE TABLE IF NOT EXISTS`, and deterministic seed upserts. They contain no `DROP`, `TRUNCATE`, credential, or user-management statements.
 

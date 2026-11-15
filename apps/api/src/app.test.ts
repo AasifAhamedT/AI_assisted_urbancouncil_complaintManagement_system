@@ -79,5 +79,13 @@ describe("authentication route boundaries", () => {
     expect(response.status).toBe(401);
     expect(response.body.error.code).toBe("AUTHENTICATION_REQUIRED");
   });
+
+  it("protects knowledge document management from unauthenticated callers", async () => {
+    const { createApp } = await import("./app.js");
+    const response = await request(createApp()).get("/api/v1/knowledge/documents");
+
+    expect(response.status).toBe(401);
+    expect(response.body.error.code).toBe("AUTHENTICATION_REQUIRED");
+  });
 });
 

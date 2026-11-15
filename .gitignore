@@ -39,6 +39,7 @@ htmlcov/
 uploads/
 storage/
 chroma_data/
+authorized_documents/
 *.sqlite3
 
 # IDE and operating-system files

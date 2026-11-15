@@ -20,6 +20,8 @@ class RequestContextMiddleware:
             if re.fullmatch(r"[A-Za-z0-9._:-]{1,100}", supplied)
             else str(uuid4())
         )
+        state = scope.setdefault("state", {})
+        state["request_id"] = request_id
 
         async def send_with_request_id(message: Message) -> None:
             if message["type"] == "http.response.start":

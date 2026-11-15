@@ -18,6 +18,7 @@ interface CategoryRoutingRow extends RowDataPacket, CategoryRouting {}
 interface DepartmentIdRow extends RowDataPacket {
   departmentId: string;
 }
+interface UserIdRow extends RowDataPacket { userId: string }
 
 export class DepartmentRepository {
   private readonly pool = databasePools.department;
@@ -126,6 +127,18 @@ export class DepartmentRepository {
       [userId]
     );
     return rows[0]?.departmentId ?? null;
+  }
+
+  async findActiveAccountUserIdForDepartment(departmentId: string): Promise<string | null> {
+    const [rows] = await this.pool.execute<UserIdRow[]>(
+      `SELECT m.user_id AS userId
+       FROM department_account_mappings AS m
+       INNER JOIN departments AS d ON d.id = m.department_id
+       WHERE m.department_id = ? AND m.is_active = TRUE AND d.is_active = TRUE
+       LIMIT 1`,
+      [departmentId]
+    );
+    return rows[0]?.userId ?? null;
   }
 
   async findCategory(id: string): Promise<Category | null> {

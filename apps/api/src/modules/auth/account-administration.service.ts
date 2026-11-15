@@ -57,5 +57,9 @@ export class AccountAdministrationService {
   async listUsers(ids: string[]): Promise<PublicUser[]> {
     return (await this.repository.listUsersByIds(ids)).map(toPublicUser);
   }
+
+  listActiveAdministratorIds(): Promise<string[]> {
+    return this.repository.listActiveUserIdsByRole("ADMINISTRATOR");
+  }
 }
 

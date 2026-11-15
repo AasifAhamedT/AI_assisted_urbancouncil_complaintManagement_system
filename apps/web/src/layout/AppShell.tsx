@@ -1,10 +1,11 @@
-import { useState, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import type { RoleCode } from "../api/types";
 import { useAuth } from "../auth/AuthContext";
 import { Icon, type IconName } from "../components/Icon";
 import { humanize } from "../utils/format";
+import { apiRequest } from "../api/client";
 
 interface NavItem {
   to: string;
@@ -20,9 +21,13 @@ const navigation: NavItem[] = [
   { to: "/complaints", label: "Assigned complaints", icon: "complaints", roles: ["DEPARTMENT"] },
   { to: "/complaints", label: "All complaints", icon: "complaints", roles: ["ADMINISTRATOR"] },
   { to: "/map", label: "Complaint map", icon: "map", roles: ["DEPARTMENT", "ADMINISTRATOR"] },
+  { to: "/reassignments", label: "Reassignments", icon: "complaints", roles: ["DEPARTMENT", "ADMINISTRATOR"] },
+  { to: "/notifications", label: "Notifications", icon: "bell" },
+  { to: "/knowledge", label: "Document guide", icon: "chat", roles: ["CITIZEN"] },
   { to: "/admin/setup", label: "Council setup", icon: "settings", roles: ["ADMINISTRATOR"] },
   { to: "/admin/classifications", label: "AI review", icon: "integrations", roles: ["ADMINISTRATOR"] },
   { to: "/admin/integrations", label: "System services", icon: "integrations", roles: ["ADMINISTRATOR"] },
+  { to: "/admin/knowledge", label: "Knowledge documents", icon: "file", roles: ["ADMINISTRATOR"] },
   { to: "/future", label: "Upcoming tools", icon: "future" }
 ];
 
@@ -30,6 +35,21 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
   const { session, logout } = useAuth();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const refreshUnread = useCallback(() => {
+    void apiRequest<{ data: { unreadCount: number } }>({
+      url: "/api/v1/notifications/unread-count"
+    }).then((response) => setUnreadNotifications(response.data.unreadCount)).catch(() => undefined);
+  }, []);
+  useEffect(() => {
+    refreshUnread();
+    const interval = window.setInterval(refreshUnread, 60_000);
+    window.addEventListener("notifications-updated", refreshUnread);
+    return () => {
+      window.clearInterval(interval);
+      window.removeEventListener("notifications-updated", refreshUnread);
+    };
+  }, [refreshUnread, session?.user.id]);
   if (!session) return null;
   const items = navigation.filter((item) => !item.roles || item.roles.includes(session.user.role));
   const roleLabel = session.user.role === "DEPARTMENT" ? "Department Account" : humanize(session.user.role);
@@ -54,7 +74,7 @@ export const AppShell = ({ children }: { children: ReactNode }) => {
         <nav aria-label="Primary navigation">
           {items.map((item) => (
             <NavLink key={`${item.to}-${item.label}`} to={item.to} end={item.to === "/dashboard"} onClick={() => setMenuOpen(false)}>
-              <Icon name={item.icon} /><span>{item.label}</span>
+              <Icon name={item.icon} /><span>{item.label}</span>{item.to === "/notifications" && unreadNotifications > 0 && <strong className="nav-count" aria-label={`${unreadNotifications} unread notifications`}>{unreadNotifications > 99 ? "99+" : unreadNotifications}</strong>}
             </NavLink>
           ))}
         </nav>

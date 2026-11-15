@@ -1,4 +1,4 @@
--- Read-only verification queries. Run only after migrations 000-008 succeed.
+-- Read-only verification queries. Run only after migrations 000-010 succeed.
 
 SELECT schema_name
 FROM information_schema.schemata
@@ -40,6 +40,36 @@ FROM information_schema.tables
 WHERE table_schema = 'complaint_db'
   AND table_name IN ('ai_recommendations', 'classification_reviews')
 ORDER BY table_name;
+
+SELECT column_name, extra
+FROM information_schema.columns
+WHERE table_schema = 'complaint_db'
+  AND table_name = 'reassignment_requests'
+  AND column_name IN ('approved_department_id', 'pending_complaint_id')
+ORDER BY column_name;
+
+SELECT constraint_name, constraint_type
+FROM information_schema.table_constraints
+WHERE constraint_schema = 'complaint_db'
+  AND table_name = 'reassignment_requests'
+  AND constraint_name = 'uq_reassignment_pending_complaint';
+
+SELECT column_name
+FROM information_schema.columns
+WHERE table_schema = 'notification_db'
+  AND table_name = 'notifications'
+  AND column_name = 'deduplication_key';
+
+SELECT constraint_name, constraint_type
+FROM information_schema.table_constraints
+WHERE constraint_schema = 'notification_db'
+  AND table_name = 'notifications'
+  AND constraint_name = 'uq_notifications_deduplication_key';
+
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'notification_db'
+  AND table_name = 'notification_dispatch_failures';
 
 SELECT
   c.name AS category_name,

@@ -2,9 +2,13 @@ import type { Request, Response } from "express";
 
 import type { ClassificationListQuery, ReviewClassificationInput } from "./classification.schemas.js";
 import { ClassificationService } from "./classification.service.js";
+import { NotificationEventDispatcher } from "../notification/notification-events.service.js";
 
 export class ClassificationController {
-  constructor(private readonly service = new ClassificationService()) {}
+  constructor(
+    private readonly service = new ClassificationService(),
+    private readonly notifications = new NotificationEventDispatcher()
+  ) {}
 
   list = async (request: Request, response: Response) => {
     response.json({
@@ -31,5 +35,11 @@ export class ClassificationController {
       request.auth!.userId
     );
     response.json({ data: result });
+    this.notifications.queue({
+      eventType: "COMPLAINT_ASSIGNED",
+      aggregateId: result.complaint.id,
+      requestId: request.requestId,
+      task: () => this.notifications.eventService.complaintAssigned(result.complaint)
+    });
   };
 }

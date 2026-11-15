@@ -21,3 +21,9 @@ GIS location storage, authorized markers, bounding boxes, and nearby search are 
 
 AI recommendation storage and Administrator review are documented in [`../../docs/api/ai-classification-api.md`](../../docs/api/ai-classification-api.md).
 
+Department reassignment requests, Administrator decisions, isolation rules, and transaction behavior are documented in [`../../docs/api/reassignment-api.md`](../../docs/api/reassignment-api.md).
+
+Recipient-scoped in-app notifications, unread actions, preferences, event integration, and duplicate/failure handling are documented in [`../../docs/api/notification-api.md`](../../docs/api/notification-api.md).
+
+Administrator-only knowledge ingestion/version management and Citizen grounded queries are documented in [`../../docs/api/knowledge-rag-api.md`](../../docs/api/knowledge-rag-api.md).
+

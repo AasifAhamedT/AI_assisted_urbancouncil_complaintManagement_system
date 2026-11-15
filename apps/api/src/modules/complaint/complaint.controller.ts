@@ -7,12 +7,14 @@ import type {
 } from "./complaint.schemas.js";
 import { ClassificationService } from "../classification/classification.service.js";
 import { ComplaintService } from "./complaint.service.js";
+import { NotificationEventDispatcher } from "../notification/notification-events.service.js";
 import type { ComplaintListOptions } from "./complaint.types.js";
 
 export class ComplaintController {
   constructor(
     private readonly service = new ComplaintService(),
-    private readonly classifications = new ClassificationService()
+    private readonly classifications = new ClassificationService(),
+    private readonly notifications = new NotificationEventDispatcher()
   ) {}
 
   listCategories = async (_request: Request, response: Response) => {
@@ -25,6 +27,12 @@ export class ComplaintController {
       request.auth!
     );
     response.status(201).json({ data: { complaint } });
+    this.notifications.queue({
+      eventType: "COMPLAINT_SUBMITTED",
+      aggregateId: complaint.id,
+      requestId: request.requestId,
+      task: () => this.notifications.eventService.complaintSubmitted(complaint)
+    });
     setImmediate(() => {
       void this.classifications.classifyComplaint(complaint.id, request.requestId).catch((error: unknown) => {
         const code = error instanceof Error && "code" in error
@@ -69,6 +77,12 @@ export class ComplaintController {
       request.auth!
     );
     response.json({ data: { complaint } });
+    this.notifications.queue({
+      eventType: "COMPLAINT_STATUS_CHANGED",
+      aggregateId: complaint.id,
+      requestId: request.requestId,
+      task: () => this.notifications.eventService.complaintStatusChanged(complaint)
+    });
   };
 
   history = async (request: Request, response: Response) => {

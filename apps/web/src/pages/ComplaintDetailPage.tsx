@@ -39,6 +39,7 @@ export const ComplaintDetailPage = () => {
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({ title: "", description: "" });
   const [statusForm, setStatusForm] = useState<{ status: ComplaintStatus | ""; reason: string }>({ status: "", reason: "" });
+  const [reassignmentReason, setReassignmentReason] = useState("");
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
@@ -128,11 +129,26 @@ export const ComplaintDetailPage = () => {
     } catch (reason) { setError(messageFromError(reason)); } finally { setBusy(false); }
   };
 
+  const requestReassignment = async (event: FormEvent) => {
+    event.preventDefault();
+    setBusy(true); setError(""); setSuccess("");
+    try {
+      await apiRequest({
+        method: "POST",
+        url: "/api/v1/reassignments",
+        data: { complaintId: id, reason: reassignmentReason.trim() }
+      });
+      setReassignmentReason("");
+      setSuccess("Reassignment request submitted. The complaint remains assigned to your department until an Administrator approves it.");
+    } catch (reason) { setError(messageFromError(reason)); } finally { setBusy(false); }
+  };
+
   if (!session) return null;
   if (loading) return <div className="page-wrap"><LoadingState label="Loading complaint" /></div>;
   if (!complaint) return <div className="page-wrap"><ErrorBanner message={error || "Complaint not found."} /></div>;
   const isCitizen = session.user.role === "CITIZEN";
   const canChangeStatus = session.user.role !== "CITIZEN" && nextStatuses.length > 0;
+  const canRequestReassignment = session.user.role === "DEPARTMENT" && !complaint.classificationReviewRequired && complaint.status !== "CLOSED";
   const canEditLocation = session.user.role === "ADMINISTRATOR" || (isCitizen && complaint.status === "SUBMITTED");
 
   return (
@@ -163,6 +179,7 @@ export const ComplaintDetailPage = () => {
         <aside className="detail-side">
           <section className="panel facts-card"><p className="eyebrow">Case information</p><dl><div><dt>Reference</dt><dd>{complaint.referenceNumber}</dd></div><div><dt>Current status</dt><dd>{humanize(complaint.status)}</dd></div><div><dt>Classification</dt><dd>{humanize(complaint.classificationState)}</dd></div><div><dt>Last updated</dt><dd>{formatDate(complaint.updatedAt)}</dd></div></dl></section>
           {canChangeStatus && <form className="panel status-form" onSubmit={changeStatus}><p className="eyebrow">Workflow action</p><h2>Update status</h2><label>Next status<select value={statusForm.status} onChange={(event) => setStatusForm({ ...statusForm, status: event.target.value as ComplaintStatus | "" })} required><option value="">Choose transition</option>{nextStatuses.map((status) => <option key={status} value={status}>{humanize(status)}</option>)}</select></label><label>Reason <span className="optional">Required for some actions</span><textarea rows={4} maxLength={1000} value={statusForm.reason} onChange={(event) => setStatusForm({ ...statusForm, reason: event.target.value })} /></label><button className="button button-primary button-wide" disabled={busy || !statusForm.status}>Update complaint</button></form>}
+          {session.user.role === "DEPARTMENT" && <form className="panel status-form" onSubmit={requestReassignment}><p className="eyebrow">Department routing</p><h2>Request reassignment</h2><p className="form-help">Use this only when the complaint belongs to another department. Its processing status will not change.</p><label>Reason <span className="required-note">Required</span><textarea rows={4} minLength={10} maxLength={1000} required disabled={!canRequestReassignment} value={reassignmentReason} onChange={(event) => setReassignmentReason(event.target.value)} placeholder="Explain why this complaint is assigned to the wrong department." /></label>{!canRequestReassignment && <small className="field-warning">Classification review must be complete, and the complaint must not be closed.</small>}<button className="button button-secondary button-wide" disabled={busy || !canRequestReassignment || reassignmentReason.trim().length < 10}>Submit request</button><Link className="inline-link" to="/reassignments">View reassignment history</Link></form>}
         </aside>
       </div>
     </div>

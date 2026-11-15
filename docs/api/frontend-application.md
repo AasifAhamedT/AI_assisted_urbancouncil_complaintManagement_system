@@ -24,6 +24,10 @@ Local URL: `http://localhost:5173`
 | `/complaints/:id` | Scoped detail, history, evidence, GIS location, and permitted actions. |
 | `/map` | Department/Administrator authorized complaint marker map. |
 | `/admin/classifications` | Administrator-only AI recommendation review and override queue. |
+| `/reassignments` | Department request ledger and Administrator decision queue. |
+| `/notifications` | Private notification history, unread actions, and in-app preference for every role. |
+| `/knowledge` | Citizen-only grounded public-information chatbot with citations and abstention. |
+| `/admin/knowledge` | Administrator-only approved-document ingestion, version history, and deactivation. |
 | `/future` | Clearly labelled interfaces awaiting later secured phases. |
 
 ## Citizen interface
@@ -34,7 +38,8 @@ Local URL: `http://localhost:5173`
 - Edit while `SUBMITTED` using optimistic versioning.
 - Complaint details and status history.
 - Validated attachment upload/list/download.
-- Future placeholders: notifications (Phase 15) and RAG chatbot (Phase 16).
+- Private complaint notification history with unread badge and read/preference controls.
+- Grounded public-information chatbot with authorized-document citations and explicit abstention.
 
 ## Department Account interface
 
@@ -43,7 +48,9 @@ Local URL: `http://localhost:5173`
 - Central-policy status transitions and reasons.
 - Attachment and history viewing.
 - Department-scoped complaint marker map and filters.
-- Future placeholders: internal actions, information requests and reassignment (Phase 14), notifications (Phase 15), and reports (Phase 17).
+- Reassignment requests from currently assigned complaint details, plus a department-scoped request ledger.
+- Private assignment/reassignment notification history with unread badge and read/preference controls.
+- Future placeholders: internal actions, information requests, and reports (Phase 17).
 
 ## Administrator interface
 
@@ -52,9 +59,12 @@ Local URL: `http://localhost:5173`
 - Category-to-department routing.
 - Department Account creation and activation status.
 - Internal AI/RAG readiness monitoring.
+- Authorized knowledge-document ingestion, version history, activation state, and re-indexing through new versions.
 - System-wide authorized complaint marker map and filters.
 - Human review of original AI recommendations, documented overrides, and backend-controlled routing.
-- Future placeholders: reassignment (Phase 14), notifications (Phase 15), RAG documents (Phase 16), and analytics (Phase 17).
+- Reassignment approval/rejection with active target selection and an immutable decision reason.
+- Private reassignment-request notification history with unread badge and read/preference controls.
+- Future placeholder: analytics (Phase 17).
 
 ## Accessibility and responsive behavior
 
@@ -70,4 +80,5 @@ Local URL: `http://localhost:5173`
 - The UI never accepts a client-supplied role or Department identity as authority.
 - Future controls are disabled until backend policies exist.
 - Uploaded evidence retains the backend scan state.
+- The knowledge chatbot sends only the Citizen's bounded public-information question; it has no complaint-record interface.
 - The project is labelled as an academic prototype and is not presented as an officially deployed Council service.

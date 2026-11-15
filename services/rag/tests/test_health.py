@@ -20,3 +20,18 @@ def test_readiness_exposes_configuration_state_without_secrets() -> None:
     assert response.json()["service"] == "rag"
     assert "gemini_api_key" not in response.text
 
+
+def test_query_requires_provider_configuration() -> None:
+    response = client.post(
+        "/v1/query",
+        json={"question": "What is the documented procedure?"},
+        headers={"x-request-id": "rag-query-test"},
+    )
+
+    assert response.status_code == 503
+    assert response.json()["error"] == {
+        "code": "RAG_PROVIDER_NOT_CONFIGURED",
+        "message": "The knowledge provider is not configured.",
+        "requestId": "rag-query-test",
+    }
+

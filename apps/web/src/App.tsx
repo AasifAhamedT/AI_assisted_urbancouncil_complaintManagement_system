@@ -11,9 +11,13 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { FutureFeaturesPage } from "./pages/FutureFeaturesPage";
 import { IntegrationStatusPage } from "./pages/IntegrationStatusPage";
 import { LoginPage } from "./pages/LoginPage";
+import { KnowledgeChatPage } from "./pages/KnowledgeChatPage";
+import { KnowledgeDocumentsPage } from "./pages/KnowledgeDocumentsPage";
 import { NewComplaintPage } from "./pages/NewComplaintPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { NotificationsPage } from "./pages/NotificationsPage";
 import { RegisterPage } from "./pages/RegisterPage";
+import { ReassignmentPage } from "./pages/ReassignmentPage";
 
 const ProtectedLayout = () => (
   <RequireAuth>
@@ -34,6 +38,10 @@ export const App = () => (
       <Route path="/admin/setup" element={<RequireAuth roles={["ADMINISTRATOR"]}><AdminSetupPage /></RequireAuth>} />
       <Route path="/admin/classifications" element={<RequireAuth roles={["ADMINISTRATOR"]}><ClassificationReviewPage /></RequireAuth>} />
       <Route path="/admin/integrations" element={<RequireAuth roles={["ADMINISTRATOR"]}><IntegrationStatusPage /></RequireAuth>} />
+      <Route path="/reassignments" element={<RequireAuth roles={["DEPARTMENT", "ADMINISTRATOR"]}><ReassignmentPage /></RequireAuth>} />
+      <Route path="/notifications" element={<NotificationsPage />} />
+      <Route path="/knowledge" element={<RequireAuth roles={["CITIZEN"]}><KnowledgeChatPage /></RequireAuth>} />
+      <Route path="/admin/knowledge" element={<RequireAuth roles={["ADMINISTRATOR"]}><KnowledgeDocumentsPage /></RequireAuth>} />
       <Route path="/future" element={<FutureFeaturesPage />} />
     </Route>
     <Route path="/" element={<Navigate to="/dashboard" replace />} />

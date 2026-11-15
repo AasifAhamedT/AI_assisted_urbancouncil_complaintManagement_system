@@ -45,6 +45,18 @@ export class DepartmentService {
     return departmentId;
   }
 
+  async requireActiveDepartment(id: string) {
+    const department = await this.requireDepartment(id);
+    if (!department.isActive) {
+      throw new AppError(409, "DEPARTMENT_INACTIVE", "An inactive department cannot receive complaints.");
+    }
+    return department;
+  }
+
+  findActiveAccountUserIdForDepartment(departmentId: string): Promise<string | null> {
+    return this.repository.findActiveAccountUserIdForDepartment(departmentId);
+  }
+
   async createDepartment(input: CreateDepartmentInput, actorUserId: string) {
     const id = randomUUID();
     await this.repository.createDepartment({

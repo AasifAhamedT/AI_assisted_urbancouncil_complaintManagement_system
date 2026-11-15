@@ -32,6 +32,8 @@ const environmentSchema = z.object({
   MAX_ATTACHMENT_BYTES: z.coerce.number().int().positive().max(25_000_000).default(10_000_000),
   INTEGRATION_TIMEOUT_MS: z.coerce.number().int().min(100).max(30_000).default(2_000),
   AI_CLASSIFICATION_TIMEOUT_MS: z.coerce.number().int().min(500).max(120_000).default(25_000),
+  RAG_TIMEOUT_MS: z.coerce.number().int().min(500).max(180_000).default(60_000),
+  MAX_KNOWLEDGE_DOCUMENT_BYTES: z.coerce.number().int().positive().max(25_000_000).default(10_000_000),
   AI_CLASSIFIER_BASE_URL: z.string().url(),
   RAG_BASE_URL: z.string().url(),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info")

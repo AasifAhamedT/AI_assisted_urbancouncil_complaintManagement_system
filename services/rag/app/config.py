@@ -18,6 +18,12 @@ class Settings(BaseSettings):
     chroma_persist_directory: Path = Path("./chroma_data")
     authorized_document_directory: Path = Path("./authorized_documents")
     top_k_results: int = Field(default=5, ge=1, le=20)
+    max_document_bytes: int = Field(default=10_000_000, ge=1, le=25_000_000)
+    chunk_size_characters: int = Field(default=1200, ge=300, le=4000)
+    chunk_overlap_characters: int = Field(default=180, ge=0, le=1000)
+    embedding_dimensions: int = Field(default=768, ge=128, le=3072)
+    maximum_retrieval_distance: float = Field(default=0.45, ge=0, le=2)
+    request_timeout_seconds: int = Field(default=30, ge=1, le=120)
 
     @property
     def provider_configured(self) -> bool:

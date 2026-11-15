@@ -26,6 +26,7 @@ interface UserRow extends RowDataPacket {
 interface RoleRow extends RowDataPacket {
   id: string;
 }
+interface UserIdRow extends RowDataPacket { id: string }
 
 interface RefreshTokenRow extends RowDataPacket {
   id: string;
@@ -168,6 +169,18 @@ export class AuthRepository {
       ids
     );
     return rows;
+  }
+
+  async listActiveUserIdsByRole(role: RoleCode): Promise<string[]> {
+    const [rows] = await this.pool.execute<UserIdRow[]>(
+      `SELECT u.id
+       FROM users AS u
+       INNER JOIN roles AS r ON r.id = u.role_id
+       WHERE r.code = ? AND u.status = 'ACTIVE'
+       ORDER BY u.id`,
+      [role]
+    );
+    return rows.map((row) => row.id);
   }
 
   async updateLastLogin(userId: string): Promise<void> {

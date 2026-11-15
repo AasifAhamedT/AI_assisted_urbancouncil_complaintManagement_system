@@ -3,11 +3,7 @@ import { Icon, type IconName } from "../components/Icon";
 import { PageHeader } from "../components/PageHeader";
 
 const allFeatures: Array<{ title: string; description: string; phase: string; icon: IconName; roles: string[] }> = [
-  { title: "Reassignment workflow", description: "Request and approve department reassignment without changing complaint status.", phase: "Phase 14", icon: "complaints", roles: ["DEPARTMENT", "ADMINISTRATOR"] },
-  { title: "Notifications", description: "Receive durable in-app updates for relevant complaint events.", phase: "Phase 15", icon: "alert", roles: ["CITIZEN", "DEPARTMENT", "ADMINISTRATOR"] },
-  { title: "Council knowledge chatbot", description: "Ask grounded public-information questions with source references.", phase: "Phase 16", icon: "future", roles: ["CITIZEN"] },
   { title: "Reports and analytics", description: "View authorized workload, duration, and outcome statistics.", phase: "Phase 17", icon: "dashboard", roles: ["DEPARTMENT", "ADMINISTRATOR"] },
-  { title: "Knowledge documents", description: "Manage approved source documents used by the RAG service.", phase: "Phase 16", icon: "settings", roles: ["ADMINISTRATOR"] }
 ];
 
 export const FutureFeaturesPage = () => {

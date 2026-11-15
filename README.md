@@ -43,6 +43,10 @@ postman/                Future API collection and environment templates
 - Phase 10: responsive three-role frontend implemented and verified.
 - Phase 11: GIS location storage, map selection, authorized markers, nearby search, and bounds filtering implemented and verified.
 - Phase 12: Gemini classification, safe fallbacks, immutable recommendations, Administrator review/override, and mapping-controlled routing implemented and verified.
+- Phase 13: optional custom-ML experiment skipped because no suitable labelled dataset is available.
+- Phase 14: Department reassignment requests, Administrator decisions, transactional assignment history, duplicate protection, and old/new Department isolation implemented and verified.
+- Phase 15: durable in-app notifications, unread state, preferences, event integration, deduplication, failure observability, migration 010, live role checks, and responsive browser flows implemented and verified.
+- Phase 16: authorized document ingestion/versioning, Gemini/ChromaDB retrieval, citation validation, explicit abstention, Citizen document guide, and Administrator knowledge governance implemented; private RAG provider configuration and live verification remain.
 
 ## Setup
 
@@ -63,6 +67,9 @@ Follow the [Development Environment Setup](docs/project/environment-setup.md). R
 - [GIS API](docs/api/gis-api.md)
 - [AI Classification API](docs/api/ai-classification-api.md)
 - [AI Classification Design](docs/ai/classification-design.md)
+- [Department Reassignment API](docs/api/reassignment-api.md)
+- [In-App Notification API](docs/api/notification-api.md)
+- [Knowledge and RAG API](docs/api/knowledge-rag-api.md)
 
 ## Security rules
 
