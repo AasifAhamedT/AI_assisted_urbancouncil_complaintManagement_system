@@ -62,7 +62,7 @@ Stores configurable complaint categories. AI classification uses only active cat
 
 ### `department_account_mappings`
 
-Associates an Auth Service user ID with one department. A user can have at most one active/current mapping in the initial design. The application verifies that the referenced user has the `DEPARTMENT` role through the Auth Service.
+Associates an Auth Service user ID with one department. A user maps to at most one department, and a department has at most one Department Account. The account represents the department rather than an individual officer. The application verifies that the referenced user has the `DEPARTMENT` role through the Auth Service.
 
 ### `category_department_mappings`
 
@@ -167,6 +167,7 @@ GIS location and notification records are in other databases. Their creation is 
 | `database/migrations/004_notification_schema.sql` | Creates notification tables. |
 | `database/migrations/005_gis_schema.sql` | Creates spatial tables and indexes. |
 | `database/migrations/006_reporting_schema.sql` | Creates reporting snapshot/cache tables. |
+| `database/migrations/007_department_account_uniqueness.sql` | Enforces one Department Account identity per department. |
 
 The scripts use `CREATE DATABASE IF NOT EXISTS`, `CREATE TABLE IF NOT EXISTS`, and deterministic seed upserts. They contain no `DROP`, `TRUNCATE`, credential, or user-management statements.
 

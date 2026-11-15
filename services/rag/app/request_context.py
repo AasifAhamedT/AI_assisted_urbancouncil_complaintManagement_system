@@ -1,0 +1,31 @@
+import re
+from uuid import uuid4
+
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
+
+
+class RequestContextMiddleware:
+    def __init__(self, app: ASGIApp) -> None:
+        self.app = app
+
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await self.app(scope, receive, send)
+            return
+
+        headers = dict(scope.get("headers", []))
+        supplied = headers.get(b"x-request-id", b"").decode("ascii", errors="ignore")
+        request_id = (
+            supplied
+            if re.fullmatch(r"[A-Za-z0-9._:-]{1,100}", supplied)
+            else str(uuid4())
+        )
+
+        async def send_with_request_id(message: Message) -> None:
+            if message["type"] == "http.response.start":
+                response_headers = list(message.get("headers", []))
+                response_headers.append((b"x-request-id", request_id.encode("ascii")))
+                message["headers"] = response_headers
+            await send(message)
+
+        await self.app(scope, receive, send_with_request_id)

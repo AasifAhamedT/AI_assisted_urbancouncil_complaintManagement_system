@@ -108,6 +108,7 @@ The PlantUML source files in the `diagrams` directory are the architecture basel
 - AI output is advisory and schema-validated.
 - Backend mapping, not Gemini, determines a department.
 - Department isolation is enforced at every relevant backend query and policy boundary.
+- One Department Account identity represents one department; individual officer accounts remain outside the approved actor model.
 - ChromaDB stores document embeddings, not operational complaint records.
 - The reporting database contains derived data only when a demonstrated query or performance need justifies it.
 - Official Council workflow, retention, SLA, and department-responsibility details remain `[NEEDS CONFIRMATION]`.

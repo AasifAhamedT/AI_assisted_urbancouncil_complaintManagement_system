@@ -1,4 +1,4 @@
--- Read-only verification queries. Run only after migrations 000-006 succeed.
+-- Read-only verification queries. Run only after migrations 000-008 succeed.
 
 SELECT schema_name
 FROM information_schema.schemata
@@ -27,6 +27,19 @@ ORDER BY table_schema, table_name;
 SELECT code, display_name FROM auth_db.roles ORDER BY code;
 SELECT code, name, is_active FROM department_db.departments ORDER BY code;
 SELECT code, name, is_active FROM department_db.categories ORDER BY code;
+
+SELECT constraint_name, constraint_type
+FROM information_schema.table_constraints
+WHERE constraint_schema = 'department_db'
+  AND table_name = 'department_account_mappings'
+  AND constraint_name IN ('uq_department_account_user', 'uq_department_account_department')
+ORDER BY constraint_name;
+
+SELECT table_name
+FROM information_schema.tables
+WHERE table_schema = 'complaint_db'
+  AND table_name IN ('ai_recommendations', 'classification_reviews')
+ORDER BY table_name;
 
 SELECT
   c.name AS category_name,
