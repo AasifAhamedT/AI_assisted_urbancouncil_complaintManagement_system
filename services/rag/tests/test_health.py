@@ -1,6 +1,8 @@
 from fastapi.testclient import TestClient
 
-from app.main import app
+from app.errors import RagError
+from app.main import app, get_rag_service
+from app.models import QueryResponse
 
 client = TestClient(app)
 
@@ -21,12 +23,21 @@ def test_readiness_exposes_configuration_state_without_secrets() -> None:
     assert "gemini_api_key" not in response.text
 
 
+class UnconfiguredRagService:
+    async def query(self, question: str) -> QueryResponse:
+        raise RagError(503, "RAG_PROVIDER_NOT_CONFIGURED", "The knowledge provider is not configured.")
+
+
 def test_query_requires_provider_configuration() -> None:
-    response = client.post(
-        "/v1/query",
-        json={"question": "What is the documented procedure?"},
-        headers={"x-request-id": "rag-query-test"},
-    )
+    app.dependency_overrides[get_rag_service] = lambda: UnconfiguredRagService()
+    try:
+        response = client.post(
+            "/v1/query",
+            json={"question": "What is the documented procedure?"},
+            headers={"x-request-id": "rag-query-test"},
+        )
+    finally:
+        app.dependency_overrides.clear()
 
     assert response.status_code == 503
     assert response.json()["error"] == {

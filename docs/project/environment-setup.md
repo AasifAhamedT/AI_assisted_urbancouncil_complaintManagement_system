@@ -58,6 +58,8 @@ Start in separate terminals:
 npm run dev:api
 ```
 
+The API development watcher includes `apps/api/.env`. Saving that file restarts the development API to load new settings. After changing credentials, verify `/ready` rather than `/health`: liveness alone does not check database access. An already-running watcher started before this change must be restarted once.
+
 ```powershell
 npm run dev:web
 ```

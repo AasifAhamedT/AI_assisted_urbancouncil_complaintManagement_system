@@ -1,0 +1,7 @@
+Phase 16 Academic Verification Notice — Version 2
+
+This is synthetic test content for the university complaint-management project. It is not an official Kinniya Urban Council procedure, policy, contact, or public notice.
+
+For this revised academic verification scenario only, demo applications are accepted at Room B-17 on Wednesdays from 2:00 PM to 4:00 PM. Applicants use the verification phrase INDIGO-517 at the test desk.
+
+This version replaces the earlier academic room, day, time, and verification phrase. It contains no real resident information, complaint data, credentials, or operational Council instructions.

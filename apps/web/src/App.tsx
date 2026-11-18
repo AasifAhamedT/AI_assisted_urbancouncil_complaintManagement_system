@@ -18,6 +18,7 @@ import { NotFoundPage } from "./pages/NotFoundPage";
 import { NotificationsPage } from "./pages/NotificationsPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { ReassignmentPage } from "./pages/ReassignmentPage";
+import { ReportsPage } from "./pages/ReportsPage";
 
 const ProtectedLayout = () => (
   <RequireAuth>
@@ -39,6 +40,7 @@ export const App = () => (
       <Route path="/admin/classifications" element={<RequireAuth roles={["ADMINISTRATOR"]}><ClassificationReviewPage /></RequireAuth>} />
       <Route path="/admin/integrations" element={<RequireAuth roles={["ADMINISTRATOR"]}><IntegrationStatusPage /></RequireAuth>} />
       <Route path="/reassignments" element={<RequireAuth roles={["DEPARTMENT", "ADMINISTRATOR"]}><ReassignmentPage /></RequireAuth>} />
+      <Route path="/reports" element={<RequireAuth roles={["DEPARTMENT", "ADMINISTRATOR"]}><ReportsPage /></RequireAuth>} />
       <Route path="/notifications" element={<NotificationsPage />} />
       <Route path="/knowledge" element={<RequireAuth roles={["CITIZEN"]}><KnowledgeChatPage /></RequireAuth>} />
       <Route path="/admin/knowledge" element={<RequireAuth roles={["ADMINISTRATOR"]}><KnowledgeDocumentsPage /></RequireAuth>} />

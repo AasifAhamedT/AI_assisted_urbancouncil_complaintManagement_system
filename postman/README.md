@@ -24,3 +24,17 @@ After migration 010, `verify-phase-15.ps1` creates one clearly labelled complain
 ./postman/verify-phase-15.ps1
 ```
 
+After the private RAG Gemini values are configured and the RAG/API services are running, `verify-phase-16.ps1` ingests synthetic academic-only text, verifies grounded citations and abstention, checks Citizen/Department/Administrator authorization, creates traceable versions, verifies inactive content is excluded, and reactivates a final version for browser QA.
+
+```powershell
+./postman/verify-phase-16.ps1
+```
+
+The script never prints credentials or tokens. It leaves one clearly labelled active verification document with its three-version audit history in the local RAG document store.
+
+## Phase 17 live verification
+
+Phase 17 requires no migration. After `GET /ready` returns `200`, use the method, headers, filters, expected response, and negative role/isolation cases in [`docs/api/reporting-api.md`](../docs/api/reporting-api.md). In particular, verify that a Department token receives only its backend-derived department and that supplying any `departmentId` with that token returns `400`.
+
+For read-only service/data reconciliation, build the API and run `node postman/verify-phase-17.mjs`. It checks the fixed 2026-01-01–2026-11-16 reporting period against existing records and requires at least two active Department mappings. It prints only aggregate verification evidence; it does not create users, complaints, or tokens. HTTP authentication checks remain separate.
+

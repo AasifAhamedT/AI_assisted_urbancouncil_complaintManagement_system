@@ -1,7 +1,7 @@
 import request from "supertest";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
-beforeAll(() => {
+beforeAll(async () => {
   vi.stubEnv("MYSQL_HOST", "127.0.0.1");
   vi.stubEnv("MYSQL_USER", "test-user");
   vi.stubEnv("MYSQL_PASSWORD", "test-password");
@@ -9,7 +9,9 @@ beforeAll(() => {
   vi.stubEnv("JWT_REFRESH_SECRET", "test-refresh-secret-with-32-characters-minimum");
   vi.stubEnv("AI_CLASSIFIER_BASE_URL", "http://127.0.0.1:8001");
   vi.stubEnv("RAG_BASE_URL", "http://127.0.0.1:8002");
-});
+  // Load dependencies during setup, outside the HTTP response test timeout.
+  await import("./app.js");
+}, 20_000);
 
 describe("GET /health", () => {
   it("returns API liveness without exposing sensitive configuration", async () => {
@@ -83,6 +85,14 @@ describe("authentication route boundaries", () => {
   it("protects knowledge document management from unauthenticated callers", async () => {
     const { createApp } = await import("./app.js");
     const response = await request(createApp()).get("/api/v1/knowledge/documents");
+
+    expect(response.status).toBe(401);
+    expect(response.body.error.code).toBe("AUTHENTICATION_REQUIRED");
+  });
+
+  it("protects operational reports from unauthenticated callers", async () => {
+    const { createApp } = await import("./app.js");
+    const response = await request(createApp()).get("/api/v1/reports/overview");
 
     expect(response.status).toBe(401);
     expect(response.body.error.code).toBe("AUTHENTICATION_REQUIRED");

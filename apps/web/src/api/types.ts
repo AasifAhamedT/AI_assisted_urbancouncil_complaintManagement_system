@@ -287,3 +287,51 @@ export interface KnowledgeAnswer {
   provider: string;
   modelName: string;
 }
+
+export interface OperationalReport {
+  scope: {
+    type: "SYSTEM" | "DEPARTMENT";
+    departmentId: string | null;
+    label: string;
+  };
+  period: {
+    from: string;
+    to: string;
+    bucket: "day" | "week" | "month";
+    timezone: "UTC";
+    generatedAt: string;
+  };
+  filters: {
+    status: ComplaintStatus | null;
+    categoryId: string | null;
+    categoryLabel: string | null;
+    departmentId: string | null;
+  };
+  summary: {
+    total: number;
+    open: number;
+    awaitingInformation: number;
+    resolved: number;
+    closed: number;
+    rejected: number;
+    averageResolutionHours: number | null;
+    resolutionSampleSize: number;
+  };
+  byStatus: Array<{ key: ComplaintStatus; label: string; count: number }>;
+  byCategory: Array<{ id: string | null; label: string; count: number }>;
+  byDepartment: Array<{ id: string | null; label: string; count: number }>;
+  trend: Array<{ periodStart: string; submitted: number; resolved: number; closed: number }>;
+  reassignments: {
+    total: number;
+    pending: number;
+    approved: number;
+    rejected: number;
+    cancelled: number;
+    averageDecisionHours: number | null;
+    decisionSampleSize: number;
+  };
+  filterOptions: {
+    categories: Array<{ id: string; name: string; isActive: boolean }>;
+    departments: Array<{ id: string; name: string; isActive: boolean }>;
+  };
+}

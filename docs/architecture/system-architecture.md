@@ -111,6 +111,7 @@ The PlantUML source files in the `diagrams` directory are the architecture basel
 - One Department Account identity represents one department; individual officer accounts remain outside the approved actor model.
 - ChromaDB stores document embeddings, not operational complaint records.
 - The reporting database contains derived data only when a demonstrated query or performance need justifies it.
+- Phase 17 operational reports use a read-only Complaint-owner reporting interface and Department service metadata to calculate current authorized metrics. They do not write cross-owner data or populate `reporting_db`; snapshots/caches remain deferred until measured load justifies explicit refresh and consistency rules.
 - Official Council workflow, retention, SLA, and department-responsibility details remain `[NEEDS CONFIRMATION]`.
 
 ## 8. Alternatives considered

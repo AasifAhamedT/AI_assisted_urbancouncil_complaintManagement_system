@@ -22,6 +22,7 @@ const navigation: NavItem[] = [
   { to: "/complaints", label: "All complaints", icon: "complaints", roles: ["ADMINISTRATOR"] },
   { to: "/map", label: "Complaint map", icon: "map", roles: ["DEPARTMENT", "ADMINISTRATOR"] },
   { to: "/reassignments", label: "Reassignments", icon: "complaints", roles: ["DEPARTMENT", "ADMINISTRATOR"] },
+  { to: "/reports", label: "Reports", icon: "dashboard", roles: ["DEPARTMENT", "ADMINISTRATOR"] },
   { to: "/notifications", label: "Notifications", icon: "bell" },
   { to: "/knowledge", label: "Document guide", icon: "chat", roles: ["CITIZEN"] },
   { to: "/admin/setup", label: "Council setup", icon: "settings", roles: ["ADMINISTRATOR"] },

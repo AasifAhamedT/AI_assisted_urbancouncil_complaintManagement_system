@@ -14,6 +14,7 @@ import { gisRouter } from "./modules/gis/gis.routes.js";
 import { knowledgeRouter } from "./modules/knowledge/knowledge.routes.js";
 import { notificationRouter } from "./modules/notification/notification.routes.js";
 import { reassignmentRouter } from "./modules/reassignment/reassignment.routes.js";
+import { reportingRouter } from "./modules/reporting/reporting.routes.js";
 import { systemRouter } from "./modules/system/system.routes.js";
 
 export const createApp = () => {
@@ -62,6 +63,7 @@ export const createApp = () => {
   app.use("/api/v1/knowledge", knowledgeRouter);
   app.use("/api/v1/notifications", notificationRouter);
   app.use("/api/v1/reassignments", reassignmentRouter);
+  app.use("/api/v1/reports", reportingRouter);
   app.use("/api/v1/system", systemRouter);
 
   app.use((request, response) => {

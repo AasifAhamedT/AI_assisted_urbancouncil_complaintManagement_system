@@ -28,6 +28,7 @@ Local URL: `http://localhost:5173`
 | `/notifications` | Private notification history, unread actions, and in-app preference for every role. |
 | `/knowledge` | Citizen-only grounded public-information chatbot with citations and abstention. |
 | `/admin/knowledge` | Administrator-only approved-document ingestion, version history, and deactivation. |
+| `/reports` | Department-scoped or Administrator system-wide operational reports with date and data filters. |
 | `/future` | Clearly labelled interfaces awaiting later secured phases. |
 
 ## Citizen interface
@@ -50,7 +51,7 @@ Local URL: `http://localhost:5173`
 - Department-scoped complaint marker map and filters.
 - Reassignment requests from currently assigned complaint details, plus a department-scoped request ledger.
 - Private assignment/reassignment notification history with unread badge and read/preference controls.
-- Future placeholders: internal actions, information requests, and reports (Phase 17).
+- Department-scoped reports with visible period, current workload outcomes, category/status trends, processing duration, and reassignment activity.
 
 ## Administrator interface
 
@@ -64,7 +65,7 @@ Local URL: `http://localhost:5173`
 - Human review of original AI recommendations, documented overrides, and backend-controlled routing.
 - Reassignment approval/rejection with active target selection and an immutable decision reason.
 - Private reassignment-request notification history with unread badge and read/preference controls.
-- Future placeholder: analytics (Phase 17).
+- System-wide or department-filtered reports with status/category/department distributions, event trends, processing duration, and reassignment activity.
 
 ## Accessibility and responsive behavior
 

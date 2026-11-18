@@ -1,8 +1,10 @@
 # Phase 16 RAG Test Report
 
-Status: implementation and automated checks complete; private Gemini configuration and live role/browser verification pending.
+Status: complete and verified.
 
 ## Automated coverage
+
+Final regression totals: 58 API tests, 2 frontend tests, and 7 RAG service tests passed. API/web production builds, Ruff, strict mypy, dependency checks, PowerShell parsing, and diff checks also passed.
 
 - Express query schema accepts only a bounded question and rejects extra private-complaint fields.
 - Administrator upload metadata is strict and bounded.
@@ -17,17 +19,34 @@ Status: implementation and automated checks complete; private Gemini configurati
 - Missing provider configuration returns a structured `503` without exposing secrets.
 - Ruff and strict mypy pass for the RAG service.
 
-## Live verification remaining
+## Live API verification
 
-After configuring the private RAG Gemini values:
+The private Gemini configuration reported `ready`, and the Phase 16 verification script completed successfully:
 
-1. Start FastAPI on port 8002, Express on 4000, and React on 5173.
-2. Confirm Administrator integration status reports RAG reachable and configured.
-3. Ingest a clearly labelled academic verification document with no personal or official-policy claims.
-4. Verify the Administrator sees version 1, `READY`, checksum, chunk count, and active state.
-5. Ask one supported Citizen question and verify citation title/version/location.
-6. Ask one unsupported question and verify explicit abstention with no citations.
-7. Verify Department Account query and document-management requests return `403`.
-8. Upload a new version and verify earlier content is no longer returned.
-9. Deactivate the document and verify it no longer supports new answers.
-10. Verify desktop/mobile layout and browser console output.
+| Check | Result |
+|---|---|
+| RAG reachable and provider configured | Passed |
+| Unauthenticated query | `401` |
+| Department Account query | `403` |
+| Citizen document-management access | `403` |
+| Version 1 ingestion | `READY`, active, grounded citation returned |
+| Unsupported private-information question | Abstained with no citations |
+| Version 2 ingestion | `READY`; revised `B-17` facts used |
+| Deactivated document | No longer supported new answers |
+| Version 3 reactivation | Active and grounded |
+| Version history | Three versions returned to Administrator |
+
+The verification fixtures are explicitly synthetic academic content and state that they are not official Council procedure, policy, contact information, or public notices.
+
+## Browser verification
+
+- Citizen mobile chatbot returned `INDIGO-517` from the active version with document title, version, location, and excerpt.
+- Administrator desktop governance showed active version 3, `READY`, chunk count, and all three version-history records.
+- Citizen navigation exposed the document guide; Administrator navigation exposed knowledge governance.
+- No horizontal overflow was detected at either tested viewport.
+- No browser console errors or warnings were observed.
+- Screenshots: [Citizen grounded answer](phase-16-browser-chatbot.png) and [Administrator version governance](phase-16-browser-knowledge.png).
+
+## Test data note
+
+One clearly labelled `Phase 16 Academic Verification Notice` remains active in the local authorized-document store with three traceable versions. No hard deletion was performed. The content contains no real complaint, resident, credential, or Council-policy data.
