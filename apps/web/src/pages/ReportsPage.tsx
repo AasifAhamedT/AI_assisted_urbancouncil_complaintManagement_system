@@ -83,6 +83,22 @@ export const ReportsPage = () => {
   const [report, setReport] = useState<OperationalReport | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState("");
+
+  const exportPdf = async () => {
+    if (!report || loading || exporting) return;
+    setExporting(true);
+    setExportError("");
+    try {
+      const { downloadReportPdf } = await import("../utils/report-pdf");
+      await downloadReportPdf(report);
+    } catch {
+      setExportError("The PDF could not be generated. Please try again or download CSV.");
+    } finally {
+      setExporting(false);
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -130,7 +146,7 @@ export const ReportsPage = () => {
       <PageHeader
         eyebrow="Operational reporting"
         title="Reports and analytics"
-        actions={<button className="button button-secondary" disabled={loading || !report || Boolean(error)} onClick={() => report && downloadReport(report)}><Icon name="file" /> Download CSV</button>}
+        actions={<div className="report-export-actions"><button className="button button-secondary" disabled={loading || !report || Boolean(error)} onClick={() => report && downloadReport(report)}><Icon name="file" /> Download CSV</button><button className="button button-primary" disabled={loading || !report || Boolean(error) || exporting} onClick={() => void exportPdf()}><Icon name="file" />{exporting ? "Preparing PDF…" : "Download PDF"}</button></div>}
         description={isAdministrator
           ? "Review system-wide complaint activity or narrow the report to one department."
           : "Review complaint activity only for the department assigned to this account."}
@@ -145,6 +161,7 @@ export const ReportsPage = () => {
         <button className="button button-primary" type="submit">Apply filters</button>
       </form>
       {error && <ErrorBanner message={error} />}
+      {exportError && <ErrorBanner message={exportError} />}
       {loading ? <section className="panel"><LoadingState label="Preparing report" /></section> : report && (
         <>
           <div className="report-context" role="status">

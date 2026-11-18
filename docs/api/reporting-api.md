@@ -78,3 +78,13 @@ Expected: `200 OK` with:
 7. Verify that changing dates and filters updates the response period and that UI totals match the API response.
 
 No Phase 17 migration is required.
+
+## Downloadable reports
+
+On **Reports**, select the required period and filters, choose **Apply filters**, then **Download CSV** or **Download PDF**. Downloads contain the currently loaded report, including its scope, applied filters, UTC period, generation timestamp, metric definitions, summary, distributions, trends, and reassignment statistics. Unsaved filter edits do not change exported data. Export buttons are disabled while a report is loading or unavailable.
+
+Both formats reuse the same report rows from the authorized API response. No new endpoint or database objects are required. Department exports retain backend-enforced department scope; unrelated selector options are not exported.
+
+PDF uses lazy-loaded jsPDF with A4 pages, wrapped labels, repeated section headings on continuation pages, and page numbers. Browser canvas font fallback supports configurable English, Tamil, and Sinhala labels when those fonts are installed. Pages are embedded as images, so PDF text is not selectable/searchable or tagged for screen readers; use CSV for machine-readable data. The canvas renderer used by automated tests is a development-only dependency.
+
+Manual browser check: after applying filters, download both formats and verify their date range, scope, and totals match the displayed report. Open the PDF in a viewer and check page breaks. A failed PDF export displays a retry message and leaves CSV available.

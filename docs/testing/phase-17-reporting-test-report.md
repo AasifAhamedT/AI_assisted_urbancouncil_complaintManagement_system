@@ -38,9 +38,9 @@ Live checks returned `200` for all three account logins, Administrator reporting
 
 Additional fixes clear stale report results after a failed filter request and allow the report filter grid to wrap within the available width. The API test setup now loads dependencies before timing HTTP assertions, fixing a cold-import timeout. Final checks: 65 API tests, 2 web tests, 5 classifier tests, and 7 RAG tests passed; TypeScript checks and both production builds passed. Vite still emits its non-fatal chunk-size advisory. Sandboxed Python tests stalled; their identified processes were stopped and the tests passed outside the sandbox.
 
-## Remaining verification
+## Browser layout and CSV verification
 
-- Desktop and narrow/mobile report layouts are inspected in the browser.
+The Reports page was inspected at desktop (1440 x 1000) and mobile (390 x 844) sizes, including monthly filtering. Evidence: `phase-17-reports-desktop.jpg` and `phase-17-reports-mobile.jpg`. A browser-downloaded CSV was inspected and contained the scoped metadata, 9 complaint submissions, and 6 reassignment requests for the selected report.
 
 ## Metric reconciliation and department isolation — 2026-11-16
 
@@ -48,4 +48,14 @@ Additional fixes clear stale report results after a failed filter request and al
 
 Verified totals, open and terminal status counts, category/department distributions, resolution sample sizes and means, event bucket counts, reassignment status counts and decision durations. Both Department scopes contained only their own department, omitted department selector options, and rejected a supplied other-department filter. This checks the service/data boundary; actual HTTP login and authorization evidence is recorded above. No complaint or configuration records were modified.
 
-The project owner also reported that the Reports page loaded without errors. Detailed desktop/mobile visual inspection remains distinct from that user confirmation.
+The project owner also reported that the Reports page loaded without errors. Browser inspection is recorded separately above.
+
+## PDF downloads — 2026-11-18
+
+Added Download PDF alongside CSV. Both exports share the same row builder and use the loaded, backend-authorized report. The PDF library is loaded only when requested. No migration or backend change is required.
+
+Verification: all 9 web tests passed (3 files), including valid PDF output, multilingual labels, scoped metrics, omission of unrelated filter options, a 366-day report with every daily row present and repeated trend headings, footer clearance, empty distributions, and unavailable-canvas error handling. The web production build and strict TypeScript check passed. A generated two-page synthetic report was rendered using Poppler; both pages were visually inspected for margins, wrapping, multilingual text, column alignment, and footers.
+
+Live browser verification: signed in using the existing local Administrator account, opened Reports, and clicked Download PDF. The completed download was `council-report-system-2026-10-20-2026-11-18.pdf` (4 A4 pages, 495542 bytes). All four downloaded pages were rendered and inspected: matching scope/dates, 9 submitted/open complaints, category/department counts, all daily trend rows, and 6 reassignment requests (3 approved, 3 rejected). Repeated section headings and page footers remained readable. Browser evidence: `phase-17-pdf-download.png`. Initial localhost checks were blocked by sandbox socket restrictions; restarting only the test-started frontend/API outside that sandbox resolved connectivity without application code changes.
+
+PDF text is rasterized to preserve browser font fallback; it is not searchable/selectable. CSV remains the machine-readable alternative. The dependency audit reports 5 high-severity findings in the existing Vite/Vitest build-tool dependency chain; none were reported against jsPDF. The existing Vite chunk-size advisory remains non-fatal.

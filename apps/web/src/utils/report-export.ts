@@ -7,7 +7,7 @@ export const csvCell = (value: string | number | null): string => {
   return `"${text.replaceAll('"', '""')}"`;
 };
 
-export const reportCsv = (report: OperationalReport): string => {
+export const reportRows = (report: OperationalReport): Array<Array<string | number | null>> => {
   const rows: Array<Array<string | number | null>> = [];
   const add = (...values: Array<string | number | null>) => { rows.push(values); };
   add("Smart Urban Council Complaint Management System", "Operational report");
@@ -53,17 +53,26 @@ export const reportCsv = (report: OperationalReport): string => {
   add("Cancelled", report.reassignments.cancelled);
   add("Average decision (hours)", report.reassignments.averageDecisionHours);
   add("Decision sample size", report.reassignments.decisionSampleSize);
+  return rows;
+};
+
+export const reportCsv = (report: OperationalReport): string => {
+  const rows = reportRows(report);
   // UTF-8 BOM makes non-English category/department labels readable in Excel.
   return "\uFEFF" + rows.map(row => row.map(csvCell).join(",")).join("\r\n") + "\r\n";
 };
 
-export const downloadReport = (report: OperationalReport): void => {
-  const url = URL.createObjectURL(new Blob([reportCsv(report)], { type: "text/csv;charset=utf-8" }));
+export const saveReportBlob = (report: OperationalReport, blob: Blob, extension: "csv" | "pdf"): void => {
+  const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `council-report-${report.scope.departmentId ? "department" : "system"}-${report.period.from}-${report.period.to}.csv`;
+  anchor.download = `council-report-${report.scope.departmentId ? "department" : "system"}-${report.period.from}-${report.period.to}.${extension}`;
   document.body.append(anchor);
   anchor.click();
   anchor.remove();
   window.setTimeout(() => URL.revokeObjectURL(url), 1_000);
+};
+
+export const downloadReport = (report: OperationalReport): void => {
+  saveReportBlob(report, new Blob([reportCsv(report)], { type: "text/csv;charset=utf-8" }), "csv");
 };

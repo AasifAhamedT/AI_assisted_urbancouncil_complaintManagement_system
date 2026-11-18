@@ -47,7 +47,7 @@ postman/                Future API collection and environment templates
 - Phase 14: Department reassignment requests, Administrator decisions, transactional assignment history, duplicate protection, and old/new Department isolation implemented and verified.
 - Phase 15: durable in-app notifications, unread state, preferences, event integration, deduplication, failure observability, migration 010, live role checks, and responsive browser flows implemented and verified.
 - Phase 16: authorized document ingestion/versioning, Gemini/ChromaDB retrieval, citation validation, explicit abstention, Citizen document guide, Administrator governance, live role checks, and responsive browser workflows implemented and verified.
-- Phase 17: secured operational reporting API and Department/Administrator analytics UI implemented; automated checks, live role checks, metric reconciliation and Department isolation pass. Detailed desktop/mobile visual QA remains.
+- Phase 17: secured operational reporting API and Department/Administrator analytics UI with CSV and PDF downloads. Automated checks, live role checks, metric reconciliation, Department isolation, desktop/mobile layouts, and CSV download verified. PDF generation, full-year pagination, signed-in browser download, and all downloaded PDF pages verified.
 
 ## Setup
 
